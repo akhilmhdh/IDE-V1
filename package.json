@@ -4,7 +4,7 @@
     "description": "A nodejs based web ide to compile multiple language",
     "main": "index.js",
     "scripts": {
-        "start": "ts-node-dev ./index.ts",
+        "start": "ts-node-dev ./src/bin/www.ts",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix"
     },
