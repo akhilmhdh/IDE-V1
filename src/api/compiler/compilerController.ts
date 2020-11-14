@@ -8,10 +8,11 @@ const codeSubmission: RequestHandler = async (req, res, next) => {
         const { error, value } = compilerValidator.submit.validate(req.body);
         if (error) next({ statusCode: 417, message: 'Validation failed' });
 
-        await compilerService.submit();
-        res.send({ hello: 'world' });
+        const compiledOutput = await compilerService.submit();
+        res.send({ result: compiledOutput });
     } catch (error) {
-        next({ statusCode: 500, message: error });
+        console.log(error);
+        next({ statusCode: 500, message: error.message });
     }
 };
 

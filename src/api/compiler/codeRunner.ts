@@ -70,6 +70,7 @@ export default class CodeRunner {
             );
             console.log(result);
         } catch (error) {
+            console.log('runner error', error);
             throw new ErrorHandler(500, error.message);
         }
     }

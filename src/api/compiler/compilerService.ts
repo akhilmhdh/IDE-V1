@@ -17,8 +17,7 @@ int main(){
 
 const submit = async () => {
     const codeRunnerInstance = new CodeRunner('test', 'cpp');
-    await codeRunnerInstance.runCppProgram(testData, '1 2');
-    return 'hello';
+    return await codeRunnerInstance.runCppProgram(testData, '1 2');
 };
 
 export default {

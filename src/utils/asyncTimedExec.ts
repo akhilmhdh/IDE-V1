@@ -11,7 +11,7 @@ const asyncTimedExec = async (cmd: string): Promise<any> => {
         const execPromise = asyncExec(cmd);
 
         const timeOutPromise = new Promise((resolve, reject) => {
-            setTimeout(reject, 5000, 'Timeout');
+            setTimeout(() => reject(new Error('Timeout')), 5000);
         });
 
         const result = await Promise.race([timeOutPromise, execPromise]);
