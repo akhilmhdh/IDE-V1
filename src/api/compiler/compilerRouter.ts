@@ -1,9 +1,8 @@
 import { Router } from 'express';
+import compilerController from './compilerController';
 
 const router = Router();
 
-router.get('/compile', (req, res) => {
-    res.send({ hello: 'world' });
-});
+router.get('/compile', compilerController.codeSubmission);
 
 export default router;
