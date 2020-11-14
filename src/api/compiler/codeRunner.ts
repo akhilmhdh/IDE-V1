@@ -3,6 +3,8 @@ import fs from 'fs/promises';
 import logger from '../../utils/logger';
 import path from 'path';
 import { exec } from 'child_process';
+import { ErrorHandler } from '../../utils/errorHandler';
+import asyncExec from '../../utils/asyncExec';
 
 /**
  * Session directory to save code files temporary
@@ -14,7 +16,7 @@ const codeSessionDirFile = (fileName: string) =>
  * class to handle program execution
  * handle temporary file creation and deletion
  */
-class CodeRunner {
+export default class CodeRunner {
     fileName: string;
     lang: string;
     /**
@@ -36,6 +38,7 @@ class CodeRunner {
             logger.info(`${fileName} saved`);
         } catch (error) {
             logger.error(error, 'File creation failed');
+            throw new ErrorHandler(500, 'Internal server error');
         }
     }
 
@@ -49,10 +52,25 @@ class CodeRunner {
             logger.info(`${fileName} deleted`);
         } catch (error) {
             logger.error(error, 'File deletion failed');
+            throw new ErrorHandler(500, 'Internal server error');
         }
     }
 
-    async runCppProgram(fileName: string, data: string, input: string) {
-        return new Promise((resolve, reject) => {});
+    async runCppProgram(data: string, input: string) {
+        try {
+            /**
+             * create both c++ input code and input for the code
+             */
+            await this.createAFile(`${this.fileName}.cpp`, data);
+            await this.createAFile(`${this.fileName}-input.txt`, input);
+
+            await asyncExec(`g++ -o ${this.fileName} ${this.fileName}`);
+            const result = await asyncExec(
+                `${this.fileName} < ${this.fileName}-input.txt`
+            );
+            console.log(result);
+        } catch (error) {
+            throw new ErrorHandler(500, error.message);
+        }
     }
 }
