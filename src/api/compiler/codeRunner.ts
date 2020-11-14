@@ -56,6 +56,45 @@ export default class CodeRunner {
         }
     }
 
+    /**
+     * C program executer
+     * @param data : script in C
+     * @param input : necessary inputs for the program
+     */
+    async runCProgram(data: string, input: string) {
+        try {
+            /**
+             * create both c input code and input for the code
+             */
+            await this.createAFile(`${this.fileName}.c`, data);
+            await this.createAFile(`${this.fileName}-input.txt`, input);
+
+            /**
+             * command line execution
+             */
+            await asyncExec(`gcc -o ${this.fileName} ${this.fileName}.c`);
+            const result = await asyncTimedExec(
+                `${this.fileName} < ${this.fileName}-input.txt`
+            );
+
+            // clean-up
+            await this.deleteAFile(`${this.fileName}.c`);
+            await this.deleteAFile(`${this.fileName}-input.txt`);
+
+            return result;
+        } catch (error) {
+            // clean-up
+            await this.deleteAFile(`${this.fileName}.c`);
+            await this.deleteAFile(`${this.fileName}-input.txt`);
+            throw new ErrorHandler(500, error.message);
+        }
+    }
+
+    /**
+     * cpp program executer
+     * @param data : script in C++
+     * @param input : necessary inputs for the program
+     */
     async runCppProgram(data: string, input: string) {
         try {
             /**
@@ -64,13 +103,23 @@ export default class CodeRunner {
             await this.createAFile(`${this.fileName}.cpp`, data);
             await this.createAFile(`${this.fileName}-input.txt`, input);
 
+            /**
+             * command line execution
+             */
             await asyncExec(`g++ -o ${this.fileName} ${this.fileName}.cpp`);
             const result = await asyncTimedExec(
                 `${this.fileName} < ${this.fileName}-input.txt`
             );
-            console.log(result);
+
+            // clean-up
+            await this.deleteAFile(`${this.fileName}.cpp`);
+            await this.deleteAFile(`${this.fileName}-input.txt`);
+
+            return result;
         } catch (error) {
-            console.log('runner error', error);
+            // clean-up
+            await this.deleteAFile(`${this.fileName}.cpp`);
+            await this.deleteAFile(`${this.fileName}-input.txt`);
             throw new ErrorHandler(500, error.message);
         }
     }
