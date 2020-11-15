@@ -3,7 +3,7 @@ import randomToken from '../../utils/randomToken';
 import CodeRunner from './codeRunner';
 import { SubmissionDetails } from './compiler.inheritance';
 
-const submit = async ({ lang, input = '', script }: SubmissionDetails) => {
+const submit = async ({ lang, input = ' ', script }: SubmissionDetails) => {
     const fileid = randomToken(3);
     const fileName = `test-${fileid}`;
     const codeRunnerInstance = new CodeRunner(fileName, lang);

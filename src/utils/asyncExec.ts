@@ -1,4 +1,5 @@
 import { exec } from 'child_process';
+import { ErrorHandler } from './errorHandler';
 
 /**
  * Executes a shell command and return it as a Promise.
@@ -9,8 +10,7 @@ const asyncExec = (cmd: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
-                console.log(error);
-                reject('commandline argument failed');
+                reject(new Error(error.message));
             }
             resolve(stdout);
         });

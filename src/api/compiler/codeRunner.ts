@@ -33,7 +33,7 @@ export default class CodeRunner {
      * @param {string} fileName
      * @param  {string } data : content to be saved
      */
-    async createAFile(fileName: string, data: any): Promise<void> {
+    async createAFile(fileName: string, data: any = ' '): Promise<void> {
         try {
             fs.writeFile(fileName, data);
             logger.info(`${fileName} saved`);
@@ -98,6 +98,7 @@ export default class CodeRunner {
 
             // clean-up
             await this.deleteAFile(`${this.fileName}.c`);
+            await this.deleteAFile(`${this.fileName}`);
             await this.deleteAFile(`${this.fileName}-input.txt`);
 
             return result;
@@ -131,6 +132,7 @@ export default class CodeRunner {
             );
             // clean-up
             await this.deleteAFile(`${this.fileName}.cpp`);
+            await this.deleteAFile(`${this.fileName}`);
             await this.deleteAFile(`${this.fileName}-input.txt`);
             return result;
         } catch (error) {

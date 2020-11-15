@@ -11,7 +11,6 @@ const codeSubmission: RequestHandler = async (req, res, next) => {
         const compiledOutput = await compilerService.submit(value);
         res.send({ result: compiledOutput });
     } catch (error) {
-        console.log(error);
         next(error);
     }
 };
