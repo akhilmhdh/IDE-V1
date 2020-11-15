@@ -9,6 +9,7 @@ const asyncExec = (cmd: string): Promise<any> => {
     return new Promise((resolve, reject) => {
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
+                console.log(error);
                 reject('commandline argument failed');
             }
             resolve(stdout);

@@ -19,7 +19,7 @@ class ErrorHandler extends Error {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleError = (err: ErrorHandler, res: Response): void => {
-    const { statusCode, message } = err;
+    const { statusCode = 500, message } = err;
     res.status(statusCode).json({
         status: 'error',
         statusCode,

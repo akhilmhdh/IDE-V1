@@ -12,6 +12,12 @@ dotenv.config();
 const app = express();
 
 /**
+ * form parser middlewares
+ */
+app.use(express.json());
+app.use(express.urlencoded());
+
+/**
  * Middlewares
  */
 app.use(expressPinoLogger({ logger }));

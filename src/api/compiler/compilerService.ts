@@ -1,12 +1,20 @@
+import { base64Decode } from '../../utils/base64';
+import randomToken from '../../utils/randomToken';
 import CodeRunner from './codeRunner';
+import { SubmissionDetails } from './compiler.inheritance';
 
-const testData = `
-print("hello world")
-`;
+const submit = async ({ lang, input = '', script }: SubmissionDetails) => {
+    const fileid = randomToken(3);
+    const fileName = `test-${fileid}`;
+    const codeRunnerInstance = new CodeRunner(fileName, lang);
 
-const submit = async () => {
-    const codeRunnerInstance = new CodeRunner('test', 'python');
-    return await codeRunnerInstance.runPython3Program(testData, '');
+    const base64DecodedScript = base64Decode(script);
+    const base64DecodedInput = base64Decode(input);
+
+    return await codeRunnerInstance.runCodeRunner(
+        base64DecodedScript,
+        base64DecodedInput
+    );
 };
 
 export default {

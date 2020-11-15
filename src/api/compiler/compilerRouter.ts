@@ -3,6 +3,6 @@ import compilerController from './compilerController';
 
 const router = Router();
 
-router.get('/compile', compilerController.codeSubmission);
+router.post('/compile', compilerController.codeSubmission);
 
 export default router;

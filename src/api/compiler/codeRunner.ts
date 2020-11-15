@@ -12,18 +12,19 @@ import asyncTimedExec from '../../utils/asyncTimedExec';
 const codeSessionDir = path.join(__dirname, '../../codeSession');
 const codeSessionDirFile = (fileName: string) =>
     path.join(codeSessionDir, fileName);
+
 /**
  * class to handle program execution
  * handle temporary file creation and deletion
  */
 export default class CodeRunner {
     fileName: string;
-    lang: string;
+    lang: 'c' | 'c++' | 'python3';
     /**
      * @param fileName :string
      * @param lang : program lang to compile
      */
-    constructor(fileName: string, lang: string) {
+    constructor(fileName: string, lang: 'c' | 'c++' | 'python3') {
         this.fileName = codeSessionDirFile(fileName);
         this.lang = lang;
     }
@@ -53,6 +54,24 @@ export default class CodeRunner {
         } catch (error) {
             logger.error(error, 'File deletion failed');
             throw new ErrorHandler(500, 'Internal server error');
+        }
+    }
+
+    async runCodeRunner(data: string, input: string) {
+        try {
+            switch (this.lang) {
+                case 'c':
+                    return await this.runCProgram(data, input);
+                case 'c++':
+                    return await this.runCppProgram(data, input);
+
+                case 'python3':
+                    return await this.runPython3Program(data, input);
+                default:
+                    return '';
+            }
+        } catch (error) {
+            throw new ErrorHandler(500, error.message);
         }
     }
 
@@ -86,7 +105,7 @@ export default class CodeRunner {
             // clean-up
             await this.deleteAFile(`${this.fileName}.c`);
             await this.deleteAFile(`${this.fileName}-input.txt`);
-            throw new ErrorHandler(500, error.message);
+            throw new Error(error.message);
         }
     }
 
@@ -110,17 +129,15 @@ export default class CodeRunner {
             const result = await asyncTimedExec(
                 `${this.fileName} < ${this.fileName}-input.txt`
             );
-
             // clean-up
             await this.deleteAFile(`${this.fileName}.cpp`);
             await this.deleteAFile(`${this.fileName}-input.txt`);
-
             return result;
         } catch (error) {
             // clean-up
             await this.deleteAFile(`${this.fileName}.cpp`);
             await this.deleteAFile(`${this.fileName}-input.txt`);
-            throw new ErrorHandler(500, error.message);
+            throw new Error(error.message);
         }
     }
 
@@ -154,7 +171,7 @@ export default class CodeRunner {
             // clean-up
             await this.deleteAFile(`${this.fileName}.py`);
             await this.deleteAFile(`${this.fileName}-input.txt`);
-            throw new ErrorHandler(500, error.message);
+            throw new Error(error.message);
         }
     }
 }
