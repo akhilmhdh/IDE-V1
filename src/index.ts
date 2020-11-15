@@ -15,7 +15,7 @@ const app = express();
  * form parser middlewares
  */
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 /**
  * Middlewares

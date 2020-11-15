@@ -1,0 +1,14 @@
+FROM node:alpine
+WORKDIR "/app"
+
+COPY ./package.json ./
+COPY ./package-lock.json ./
+
+ENV NODE_ENV dev
+
+RUN npm install
+RUN apk add build-base
+RUN apk add python3
+
+COPY . .
+CMD ["npm","run","test"]
