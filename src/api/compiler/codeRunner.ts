@@ -123,4 +123,38 @@ export default class CodeRunner {
             throw new ErrorHandler(500, error.message);
         }
     }
+
+    /**
+     * python program executer
+     * @param data : script in python
+     * @param input : necessary inputs for the program
+     */
+    async runPython3Program(data: string, input: string) {
+        try {
+            /**
+             * create both python input code and input for the code to run
+             */
+            await this.createAFile(`${this.fileName}.py`, data);
+            await this.createAFile(`${this.fileName}-input.txt`, input);
+
+            /**
+             * command line execution
+             * As python is an interpretor, it needs only one step
+             */
+            const result = await asyncTimedExec(
+                `python3 ${this.fileName}.py < ${this.fileName}-input.txt `
+            );
+
+            // clean-up
+            await this.deleteAFile(`${this.fileName}.py`);
+            await this.deleteAFile(`${this.fileName}-input.txt`);
+
+            return result;
+        } catch (error) {
+            // clean-up
+            await this.deleteAFile(`${this.fileName}.py`);
+            await this.deleteAFile(`${this.fileName}-input.txt`);
+            throw new ErrorHandler(500, error.message);
+        }
+    }
 }

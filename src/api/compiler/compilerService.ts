@@ -1,17 +1,12 @@
 import CodeRunner from './codeRunner';
 
 const testData = `
-#include<stdio.h>
-
-int main(){
-    printf("%s","hello world");
-    return 0;
-}
+print("hello world")
 `;
 
 const submit = async () => {
-    const codeRunnerInstance = new CodeRunner('test', 'c');
-    return await codeRunnerInstance.runCProgram(testData, '');
+    const codeRunnerInstance = new CodeRunner('test', 'python');
+    return await codeRunnerInstance.runPython3Program(testData, '');
 };
 
 export default {
