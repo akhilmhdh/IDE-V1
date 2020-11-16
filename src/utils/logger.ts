@@ -16,7 +16,8 @@ const loggerConfig: LoggerOptions = {
     level: getLogLevel(),
     timestamp: getBool(process.env.LOG_TIME_STAMP),
     prettyPrint: {},
-    prettifier: require('pino-colada')
+    prettifier: require('pino-colada'),
+    enabled: getBool(process.env.NOLOG)
 };
 //  path.resolve(__dirname) + "/../logs/info.log")
 export default pino(loggerConfig);

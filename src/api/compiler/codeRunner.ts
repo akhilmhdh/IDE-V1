@@ -35,7 +35,7 @@ export default class CodeRunner {
      */
     async createAFile(fileName: string, data: any = ' '): Promise<void> {
         try {
-            fs.writeFile(fileName, data);
+            await fs.writeFile(fileName, data);
             logger.info(`${fileName} saved`);
         } catch (error) {
             logger.error(error, 'File creation failed');
@@ -45,7 +45,7 @@ export default class CodeRunner {
 
     async deleteAFile(fileName: string): Promise<void> {
         try {
-            fs.unlink(fileName);
+            await fs.unlink(fileName);
             logger.info(`${fileName} deleted`);
         } catch (error) {
             logger.error(error, 'File deletion failed');
