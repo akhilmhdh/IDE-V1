@@ -1,4 +1,3 @@
-import { fstat } from 'fs';
 import fs from 'fs/promises';
 import logger from '../../utils/logger';
 import path from 'path';
@@ -28,6 +27,7 @@ export default class CodeRunner {
         this.fileName = codeSessionDirFile(fileName);
         this.lang = lang;
     }
+
     /**
      * to save a file to session
      * @param {string} fileName
@@ -43,10 +43,6 @@ export default class CodeRunner {
         }
     }
 
-    /**
-     * to delete a file
-     * @param {string} fileName
-     */
     async deleteAFile(fileName: string): Promise<void> {
         try {
             fs.unlink(fileName);
@@ -57,6 +53,11 @@ export default class CodeRunner {
         }
     }
 
+    /**
+     * central function to run programs based on language
+     * @param data : input script or code
+     * @param input : program input
+     */
     async runCodeRunner(data: string, input: string) {
         try {
             switch (this.lang) {
@@ -82,15 +83,11 @@ export default class CodeRunner {
      */
     async runCProgram(data: string, input: string) {
         try {
-            /**
-             * create both c input code and input for the code
-             */
+            // create c and input file for the program
             await this.createAFile(`${this.fileName}.c`, data);
             await this.createAFile(`${this.fileName}-input.txt`, input);
 
-            /**
-             * command line execution
-             */
+            // command line execution -> gcc compile -> run the executable file
             await asyncExec(`gcc -o ${this.fileName} ${this.fileName}.c`);
             const result = await asyncTimedExec(
                 `${this.fileName} < ${this.fileName}-input.txt`
@@ -117,15 +114,11 @@ export default class CodeRunner {
      */
     async runCppProgram(data: string, input: string) {
         try {
-            /**
-             * create both c++ input code and input for the code
-             */
+            // create cpp and input file for the program
             await this.createAFile(`${this.fileName}.cpp`, data);
             await this.createAFile(`${this.fileName}-input.txt`, input);
 
-            /**
-             * command line execution
-             */
+            // command line execution
             await asyncExec(`g++ -o ${this.fileName} ${this.fileName}.cpp`);
             const result = await asyncTimedExec(
                 `${this.fileName} < ${this.fileName}-input.txt`
@@ -150,9 +143,7 @@ export default class CodeRunner {
      */
     async runPython3Program(data: string, input: string) {
         try {
-            /**
-             * create both python input code and input for the code to run
-             */
+            // create both python input code and input for the code to run
             await this.createAFile(`${this.fileName}.py`, data);
             await this.createAFile(`${this.fileName}-input.txt`, input);
 

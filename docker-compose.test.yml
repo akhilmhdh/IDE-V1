@@ -1,0 +1,11 @@
+version: '3'
+services:
+    compiler_test:
+        build:
+            context: .
+            dockerfile: Dockerfile.test
+        ports:
+            - '8000:8000'
+        volumes:
+            - /app/node_modules
+            - .:/app
