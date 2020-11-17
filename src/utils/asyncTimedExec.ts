@@ -23,6 +23,7 @@ const asyncTimedExec = async (
         const result = await Promise.race([execPromise, timeOutPromise]);
         return result;
     } catch (error) {
+        // kill the process
         logger.error(error, error.message);
         await asyncExec(`pkill ${appicationName}`);
         throw new Error(error.message);
