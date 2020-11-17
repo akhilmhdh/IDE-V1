@@ -34,7 +34,6 @@ app.get('/', (req, res) => res.send('Express + TypeScript Server'));
 app.use(
     (err: ErrorHandler, req: Request, res: Response, next: NextFunction) => {
         handleError(err, res);
-        next();
     }
 );
 
