@@ -14,5 +14,14 @@ export default {
     int main(){
         cout<<"Hello world"
         return 0;
-    }`
+    }`,
+    infLoop: `
+    #include<iostream>
+    using namespace std;
+    
+    int main(){
+        while(true){}
+        return 0;
+    }
+    `
 };

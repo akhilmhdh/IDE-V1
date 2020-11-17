@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { existsSync } from 'fs';
 import logger from '../../utils/logger';
 import path from 'path';
 import { ErrorHandler } from '../../utils/errorHandler';
@@ -85,24 +86,27 @@ export default class CodeRunner {
         try {
             // create c and input file for the program
             await this.createAFile(`${this.fileName}.c`, data);
-            await this.createAFile(`${this.fileName}-input.txt`, input);
+            await this.createAFile(`${this.fileName}_input.txt`, input);
 
             // command line execution -> gcc compile -> run the executable file
             await asyncExec(`gcc -o ${this.fileName} ${this.fileName}.c`);
             const result = await asyncTimedExec(
-                `${this.fileName} < ${this.fileName}-input.txt`
+                `${this.fileName} < ${this.fileName}_input.txt`,
+                this.fileName
             );
 
             // clean-up
             await this.deleteAFile(`${this.fileName}.c`);
             await this.deleteAFile(`${this.fileName}`);
-            await this.deleteAFile(`${this.fileName}-input.txt`);
+            await this.deleteAFile(`${this.fileName}_input.txt`);
 
             return result;
         } catch (error) {
             // clean-up
             await this.deleteAFile(`${this.fileName}.c`);
-            await this.deleteAFile(`${this.fileName}-input.txt`);
+            if (existsSync(`${this.fileName}`))
+                await this.deleteAFile(`${this.fileName}`);
+            await this.deleteAFile(`${this.fileName}_input.txt`);
             throw new Error(error.message);
         }
     }
@@ -116,22 +120,25 @@ export default class CodeRunner {
         try {
             // create cpp and input file for the program
             await this.createAFile(`${this.fileName}.cpp`, data);
-            await this.createAFile(`${this.fileName}-input.txt`, input);
+            await this.createAFile(`${this.fileName}_input.txt`, input);
 
             // command line execution
             await asyncExec(`g++ -o ${this.fileName} ${this.fileName}.cpp`);
             const result = await asyncTimedExec(
-                `${this.fileName} < ${this.fileName}-input.txt`
+                `${this.fileName} < ${this.fileName}_input.txt`,
+                this.fileName
             );
             // clean-up
             await this.deleteAFile(`${this.fileName}.cpp`);
             await this.deleteAFile(`${this.fileName}`);
-            await this.deleteAFile(`${this.fileName}-input.txt`);
+            await this.deleteAFile(`${this.fileName}_input.txt`);
             return result;
         } catch (error) {
             // clean-up
             await this.deleteAFile(`${this.fileName}.cpp`);
-            await this.deleteAFile(`${this.fileName}-input.txt`);
+            if (existsSync(`${this.fileName}`))
+                await this.deleteAFile(`${this.fileName}`);
+            await this.deleteAFile(`${this.fileName}_input.txt`);
             throw new Error(error.message);
         }
     }
@@ -145,25 +152,26 @@ export default class CodeRunner {
         try {
             // create both python input code and input for the code to run
             await this.createAFile(`${this.fileName}.py`, data);
-            await this.createAFile(`${this.fileName}-input.txt`, input);
+            await this.createAFile(`${this.fileName}_input.txt`, input);
 
             /**
              * command line execution
              * As python is an interpretor, it needs only one step
              */
             const result = await asyncTimedExec(
-                `python3 ${this.fileName}.py < ${this.fileName}-input.txt `
+                `python3 ${this.fileName}.py < ${this.fileName}_input.txt `,
+                this.fileName
             );
 
             // clean-up
             await this.deleteAFile(`${this.fileName}.py`);
-            await this.deleteAFile(`${this.fileName}-input.txt`);
+            await this.deleteAFile(`${this.fileName}_input.txt`);
 
             return result;
         } catch (error) {
             // clean-up
             await this.deleteAFile(`${this.fileName}.py`);
-            await this.deleteAFile(`${this.fileName}-input.txt`);
+            await this.deleteAFile(`${this.fileName}_input.txt`);
             throw new Error(error.message);
         }
     }

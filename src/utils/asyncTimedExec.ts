@@ -6,18 +6,25 @@ import logger from './logger';
  * @param cmd {string}: command line function
  * @return {Promise<string>}
  */
-const asyncTimedExec = async (cmd: string): Promise<any> => {
+const asyncTimedExec = async (
+    cmd: string,
+    appicationName: string
+): Promise<any> => {
     try {
         const execPromise = asyncExec(cmd);
 
         const timeOutPromise = new Promise((resolve, reject) => {
-            setTimeout(() => reject(new Error('Timeout')), 5000);
+            let timeoutId = setTimeout(async () => {
+                clearTimeout(timeoutId);
+                reject(new Error('Timeout'));
+            }, 3000);
         });
 
-        const result = await Promise.race([timeOutPromise, execPromise]);
+        const result = await Promise.race([execPromise, timeOutPromise]);
         return result;
     } catch (error) {
         logger.error(error, error.message);
+        await asyncExec(`pkill ${appicationName}`);
         throw new Error(error.message);
     }
 };
