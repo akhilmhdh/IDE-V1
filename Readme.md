@@ -32,7 +32,7 @@ A simple dockerized Nodejs Express backend to compile programs written C, C++, p
   docker-compose -f Dockerfile.dev up
 ```
 
-4. Visit _http://localhost:8000_
+4. Visit `http://localhost:8000`
 
 ### Running Test
 
@@ -55,4 +55,4 @@ A simple dockerized Nodejs Express backend to compile programs written C, C++, p
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
