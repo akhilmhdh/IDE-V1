@@ -1,9 +1,9 @@
 import Joi from 'joi';
 
 const submit = Joi.object({
-    script: Joi.string().max(100000).required(),
+    script: Joi.string().base64().max(100000).required(),
     lang: Joi.string().valid('c', 'c++', 'python3', 'javascript').required(),
-    input: Joi.string().max(1000)
+    input: Joi.string().base64().max(1000)
 });
 
 export default {
